@@ -1,74 +1,21 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
-                
-              /*  mvn archetype:generate -DgroupId=io.stockgeeks \
-                       -DartifactId=webproject-example \
-                       -DarchetypeArtifactId=maven-archetype-webapp */
-                
-             /*   mvn archetype:generate -DgroupId=io.stockgeeks \
-                       -DartifactId=my-app \
-                       -DarchetypeArtifactId=maven-archetype-my-app */
+                echo 'Building..'
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
-                
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
+                echo 'Testing..'
             }
         }
-        stage('Deliver') {
+        stage('Deploy') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
-                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                echo 'Deploying....'
             }
         }
-        stage('Generate Artifact') {
-                steps {
-                    script {
-                   def workspace = WORKSPACE
-                   workspace = env.WORKSPACE
-                   def  FILES_NAME = "/var/lib/jenkins/workspace/OPTIMUM/simple-java-maven-app/target/my-app-1.0-SNAPSHOT.jar"
-                  //  echo "Current workspace is ${env.WORKSPACE}/${FILES_DIR}"
-                     echo "Current workspace is $WORKSPACE"
-                        
-                   // sha256sum = sh(returnStdout: true, script: "sha256sum '${fileName}'")
-                 // sha256sum = sh(returnStdout: true, script: "sha256sum '${env.WORKSPACE}/target/my-app-1.0-SNAPSHOT.jar'")
-                        sha256sum = sh(returnStdout: true, script: "sha256sum '${FILES_NAME}'")
-                       
-                    echo "Check sum is $sha256sum"
-                    sh "echo ' {\"group\":\"my.group\"' > artifact.txt"
-                    sh "echo ',\"checksum\":\"${sha256sum}\"' >> artifact.txt"
-                    sh "echo ',\"artifact\":\"my-demo\"' >> artifact.txt"
-                    sh "echo ',\"database\":\"yes\"' >> artifact.txt"
-                        sh "echo ',\"version\":\"1.0\"' >> artifact.txt"
-
-          /*          def checkScumTxt =httpRequest "http://10.148.0.6:8081/service/rest/v1/search/assets/download?repository=demo&sort=version&maven.groupId=com.web.net&maven.artifactId=web-Demo&maven.baseVersion=${params.projVersion}&maven.extension=tar.sha1&maven.classifier="
-                    sh "echo '{ \"group\":\"com.web.net\"' > artifact.txt"
-                    sh "echo ',\"checksum\":\"${checkScumTxt.content}\"' >> artifact.txt"
-                    sh "echo ',\"artifact\":\"web-Demo\"' >> artifact.txt"
-                    sh "echo ',\"database\":\"yes\"' >> artifact.txt"
-                    sh "echo ',\"version\":\"${params.projVersion}\" }' >> artifact.txt"
-                    */
-
-                    }
-                }
-            }
-    }
-    
-    post {
-        always {
-             //archiveArtifacts artifacts: 'target/*.jar', fingerprint: true, onlyIfSuccessful: true
-
-            archiveArtifacts artifacts: 'artifact.txt', onlyIfSuccessful: true
-                }
     }
 }
