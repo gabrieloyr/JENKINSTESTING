@@ -5,7 +5,7 @@ pipeline {
     }
     
     stages {
-        stage('Get Details') {
+        stage ('Get Details') {
             steps {
                 echo "Build ID: ${env.BUILD_ID}"
                 echo "Build URL: ${env.BUILD_URL}"
@@ -15,6 +15,31 @@ pipeline {
                 echo "${params.Greeting} World!"
             }
         }
+        
+        stage ('Build') {
+            steps {
+                
+            }
+        }
+        
+        stage ('Deploy') {
+            steps {
+                
+            }
+        }
+        
+        stage ('Test') {
+            steps {
+                
+            }
+        }
+        
+        stage ('Release') {
+            steps {
+                
+            }   
+        }
+        
     }
 }
 
