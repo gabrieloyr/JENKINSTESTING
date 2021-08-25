@@ -18,25 +18,25 @@ pipeline {
         
         stage ('Build') {
             steps {
-                
+                echo 'Build...'
             }
         }
         
         stage ('Deploy') {
             steps {
-                
+                echo 'Deploy...'
             }
         }
         
         stage ('Test') {
             steps {
-                
+                'Test...'
             }
         }
         
         stage ('Release') {
             steps {
-                
+                'Release...'
             }   
         }
         
