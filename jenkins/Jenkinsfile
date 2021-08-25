@@ -30,13 +30,13 @@ pipeline {
         
         stage ('Test') {
             steps {
-                'Test...'
+                echo 'Test...'
             }
         }
         
         stage ('Release') {
             steps {
-                'Release...'
+                echo 'Release...'
             }   
         }
         
