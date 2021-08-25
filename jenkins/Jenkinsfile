@@ -4,14 +4,7 @@ pipeline {
         string(name: 'Greeting', defaultValue: 'Hello', description: 'This is a description...')
     }
     
-    node {
-        stage ('Example') {
-            if (env.BRANCH_NAME == 'master') {
-                echo 'master branch'
-            } else {
-                echo 'executing elsewhere..'
-            }
-        }
+    stages {
         stage ('Get Details') {
             steps {
                 echo "Build ID: ${env.BUILD_ID}"
