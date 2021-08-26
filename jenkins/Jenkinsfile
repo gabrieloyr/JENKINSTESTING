@@ -1,8 +1,8 @@
 node {
     stage('Build') {
-        steps {
+        
             echo 'Using scripted pipeline..'
-        }
+        
     }
     
     stage('Test') {
