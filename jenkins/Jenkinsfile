@@ -1,47 +1,41 @@
 pipeline {
-    agent any
-    parameters {
-        string(name: 'Greeting', defaultValue: 'Hello', description: 'This is a description...')
-    }
-    
+    agent none
     stages {
-        stage ('Get Details') {
+        stage('Build') {
+            agent any
             steps {
-                echo "Build ID: ${env.BUILD_ID}"
-                echo "Build URL: ${env.BUILD_URL}"
-                echo "Jenkins URL: ${env.JENKINS_URL}"
-                echo "Job Name: ${env.JOB_NAME}"
-                
-                echo "${params.Greeting} World!"
+                checkout scm
+                sh 'make'
+                stash includes: '**/target/*.jar', name: 'app' 
             }
         }
-        
-        stage ('Build') {
+        stage('Test on Linux') {
+            agent { 
+                label 'linux'
+            }
             steps {
-                echo 'Build...'
+                unstash 'app' 
+                sh 'make check'
+            }
+            post {
+                always {
+                    junit '**/target/*.xml'
+                }
             }
         }
-        
-        stage ('Deploy') {
+        stage('Test on Windows') {
+            agent {
+                label 'windows'
+            }
             steps {
-                echo 'Deploy...'
+                unstash 'app'
+                bat 'make check' 
+            }
+            post {
+                always {
+                    junit '**/target/*.xml'
+                }
             }
         }
-        
-        stage ('Test') {
-            steps {
-                echo 'Test...'
-            }
-        }
-        
-        stage ('Release') {
-            steps {
-                echo 'Release...'
-            }   
-        }
-        
     }
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
